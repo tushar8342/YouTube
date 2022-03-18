@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube</title>
+    <link rel="shortcut icon" href="https://cdn.pixabay.com/photo/2016/11/19/03/08/youtube-1837872__480.png">
+    <script src="https://kit.fontawesome.com/a973846c34.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./style/style.css">
+    <style>
+        
+        #main{
+            display: flex;
+            width: 95%;
+            margin: auto;
+            gap: 15px;
+           
+            margin-top: 10px;
+        }
+
+        #Videodetails{
+            height: 550px;
+            flex: 5;
+        }
+        #recomentation{
+            flex: 2;
+            height: 1400px;
+            overflow:auto;
+        }
+        #flexuu{
+            display: flex;
+            justify-content: space-between;
+        }
+        #lftuu{
+            width: 40%;
+        }
+        #rituu{
+            width: 56%;
+        }
+        img{
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="nav"></div>
+    <div style="height: 60px; border: 1px solid transparent;"></div>
+
+    <div id="main">
+        <div id="Videodetails"></div>
+        <div id="recomentation"></div>
+    </div>
+    
+    
+</body>
+</html>
+<script type="module">
+
+    import nav from "./component/nav.js"
+    document.querySelector("#nav").innerHTML = nav()    
+    var tapdata = JSON.parse(localStorage.getItem("buffer"))
+    console.log('tapdata:', tapdata)
+    var reco = JSON.parse(localStorage.getItem("reco"))
+    // console.log('reco:', reco)
+    var a = tapdata.videoid
+
+    //  var tit = document.createElement("h2")
+    //  tit.innerText = tapdata.title
+    //  console.log('tit:', tit)
+     
+
+    var appendvid =  document.querySelector("#Videodetails")
+    let iframe = document.createElement("iframe")
+    iframe.width = "100%"
+    iframe.height = "100%"
+    iframe.src = `https://www.youtube.com/embed/${a}`
+    iframe.setAttribute("allowfullscreen","true")
+    appendvid.append(iframe)
+
+
+    recomen(reco)
+
+    function recomen(reco){
+        reco.map((elem)=>{
+            let { snippet:{title,thumbnails:{medium:{url}}}} = elem
+
+               
+            var div = document.createElement("div")
+            div.setAttribute("id","flexuu")
+            var lft =  document.createElement("div")
+            lft.setAttribute("id","lftuu")
+            var rit =  document.createElement("div")
+            rit.setAttribute("id","rituu")
+            var image = document.createElement("img")
+            var tite = document.createElement("h5")
+           
+
+            image.src = url
+            tite.innerText = title
+
+            lft.append(image)
+            rit.append(tite)
+            div.append(lft,rit)
+            document.querySelector("#recomentation").append(div)
+
+        })
+    }
+
+    
+
+</script>

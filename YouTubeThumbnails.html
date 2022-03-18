@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube</title>
+    <link rel="shortcut icon" href="https://cdn.pixabay.com/photo/2016/11/19/03/08/youtube-1837872__480.png">
+    <link rel="stylesheet" href="./style/style.css">
+    <script src="https://kit.fontawesome.com/a973846c34.js" crossorigin="anonymous"></script>
+    
+    <style>
+
+        #ritoption{
+            overflow: scroll;
+        }
+        #ritoption >div:hover{
+            background-color: #e5e5e5;
+            cursor: pointer;
+        }
+
+        #home{
+            width: 100%;
+            height: 50px;
+            display: flex;
+        }
+        #homee{
+            font-size: 20px;
+            margin-top: 17px;
+            margin-left: 23px;
+            color: rgb(99, 83, 83);
+        }
+            #dwnall{
+                display: flex;
+            }
+        #result_video{
+            flex: 5;
+            width: 98%;
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            grid-gap: 15px;
+        }
+        #ritoption{
+            border: 1px solid grey;
+            flex: 1;
+            position: fixed;
+            height: 675px;
+        }
+        #fix{
+            border-radius: 8px;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+        }
+        #fix:hover{
+            box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+            width: 101%;
+            height: 101%;
+            cursor: pointer;
+        }
+
+        #imagee{
+            width: 100%;
+        }
+        h3{
+            padding-left: 20px;
+            font-size: 15px;
+            color: rgb(36, 20, 20);  
+        }
+    </style>
+</head>
+<body>
+    <div id="nav"></div>
+    <div style="height: 60px; border: 1px solid transparent;"></div>
+  
+
+
+    <div id="dwnall">
+        <div style="width: 240px;"></div>
+        <div id="ritoption"></div>
+        <div id="result_video"></div>
+    </div>
+      
+</body>
+
+
+</html>
+<script type="module">
+
+    import nav from "./component/nav.js"
+    document.querySelector("#nav").innerHTML = nav()
+
+    import rit from "./component/rit.js"
+    document.querySelector("#ritoption").innerHTML = rit()
+
+    
+    
+
+    var submit = document.querySelector("#submit")
+    submit.addEventListener("click",video)
+
+    video()
+    async function video(){
+        var searchdata = document.querySelector("#search").value
+        var response = await fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${searchdata}&type=video&key=AIzaSyCNAWvFSiXNBkZlP4DPtpqaYoroKNGj7ZY&maxResults=50&part=snippet`)
+        var data = await response.json()
+        var passdata = data.items
+        // console.log('passdata:', passdata)
+        call(passdata)
+    }
+
+    const call = (passdata) =>{
+        document.querySelector("#result_video").innerHTML = null
+        passdata.map((elem) =>{
+            var div = document.createElement("div")
+            div.setAttribute("id","fix")
+            var top =  document.createElement("div")
+            var btn =  document.createElement("div")
+            btn.style.width = "100%"
+            var image = document.createElement("img")
+            image.setAttribute("id","imagee")
+            var titel = document.createElement("h4")
+            var info = document.createElement("h5")
+            
+            image.src = elem.snippet.thumbnails.medium.url
+            titel.innerText = elem.snippet.title
+            info.innerText = elem.snippet.channelTitle
+
+            // let { snippet:{title,thumbnails:{medium:{url}}}} = elem
+            var send_video = {
+                videoid:elem.id.videoId,
+                titel : elem.snippet.title,
+                info : elem.snippet.channelTitle
+            }
+
+            div.onclick = () =>{
+                nextpage(send_video,passdata)
+            }
+
+
+            top.append(image)
+            btn.append(titel,info)
+            div.append(top,btn)
+            document.querySelector("#result_video").append(div)
+            
+        })
+    }
+
+    const nextpage = (send_video,passdata) =>{
+        console.log('send_video:', send_video)
+        var x = localStorage.setItem("buffer", JSON.stringify(send_video))
+        var y = localStorage.setItem("reco", JSON.stringify(passdata))
+        window.location.href = "Buffer.html"
+
+    }
+
+</script>
